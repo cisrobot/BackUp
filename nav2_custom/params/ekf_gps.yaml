@@ -1,0 +1,104 @@
+#로컬 
+ekf_filter_node_odom:
+  ros__parameters:
+    frequency: 30.0
+    two_d_mode: true # Recommended to use 2d mode for nav2 in mostly planar environments
+    print_diagnostics: true
+    debug: false
+    publish_tf: true
+
+    map_frame: map
+    odom_frame: odom
+    base_link_frame: base_link # the frame id used by the turtlebot's diff drive plugin
+    world_frame: odom
+
+    odom0: /scout_mini_base_controller/odom
+    odom0_config: [false, false, false,
+                  false, false, false,
+                  true,  true,  false,
+                  false, false, true,
+                  false, false, false]
+    odom0_queue_size: 10
+    odom0_differential: false
+    odom0_relative: false
+
+    imu0: /mavros/imu/data
+    imu0_config: [false, false, false,
+                  false,  false,  true,
+                  false, false, false,
+                  false,  false,  false,
+                  false,  false,  false]
+    imu0_differential: false  # If using a real robot you might want to set this to true, since usually absolute measurements from real imu's are not very accurate
+    imu0_relative: false
+    imu0_queue_size: 10
+    imu0_remove_gravitational_acceleration: true
+
+    use_control: false
+
+  
+#글로벌 
+ekf_filter_node_map:
+  ros__parameters:
+    frequency: 20.0
+    two_d_mode: true
+    publish_acceleration: false
+    publish_tf: true
+    
+    map_frame: map
+    # map_frame: odom
+    odom_frame: odom
+    base_link_frame: base_link
+    world_frame: map
+    # world_frame: odom
+    debug: False
+
+    odom0: /scout_mini_base_controller/odom
+    odom0_config: [false,  false,  false, # X,    Y,      Z
+                    false, false, false, # roll, pitch,  yaw
+                    true, true, false, # dX,   dY,     dZ
+                    false, false, true,  # droll,dpitch, dyaw
+                    false, false, false] # ddX,  ddY,    ddZ
+    odom0_nodelay: false
+    odom0_differential: false
+    odom0_relative: false
+    
+    imu0 : /mavros/imu/data
+    imu0_config: [false, false, false,
+                  true, true, true,
+                  false, false, false,
+                  true, true, true,
+                  true, true, true]
+    imu0_nodelay: false
+    imu0_differential: false
+    imu0_relative: false
+    imu0_queue_size: 7
+    imu0_pose_rejection_threshold: 0.8                
+    imu0_angular_velocity_rejection_threshold: 1.3              
+    imu0_linear_acceleration_rejection_threshold: 0.8  
+    imu0_remove_gravitational_acceleration: true  
+
+    odom1: /odometry/gps
+    odom1_config: [true, true, false,
+                   false, false, false,
+                   false, false, false,
+                   false, false, false,
+                   false, false, false]
+    odom1_queue_size: 10
+    odom1_nodelay: false
+    odom1_differential: false
+    odom1_relative: false
+    odom1_pose_rejection_threshold: 1.5
+    
+#navsat 노드
+navsat_transform_node:
+  ros__parameters:
+    frequency: 10.0
+    delay: 3.0
+    magnetic_declination_radians: 0.2313
+    yaw_offset: 0.0
+    zero_altitude: true
+    broadcast_cartesian_transform: true
+    broadcast_cartesian_transform_as_parent_frame: true
+    publish_filtered_gps: true
+    use_odometry_yaw: false
+    wait_for_datum: false
