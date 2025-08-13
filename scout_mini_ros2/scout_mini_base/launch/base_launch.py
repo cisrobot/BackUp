@@ -1,6 +1,12 @@
 #!/usr/bin/env python3
 
-# Author: Brighten Lee
+"""
+- Scout Mini 로봇 기본 구동 환경 런치
+- URDF(xacro)로 로봇 모델을 로드하고 robot_state_publisher로 TF 브로드캐스트
+- ros2_control_node와 설정 파일(scout_mini.yaml)로 하드웨어 인터페이스 및 컨트롤러 구동
+- joint_state_broadcaster, scout_mini_base_controller 스포너 실행
+- twist_mux로 다중 속도 명령 소스 관리, teleop_twist_keyboard로 키보드 조종 지원
+"""
 
 import os
 from ament_index_python.packages import get_package_share_directory
@@ -21,6 +27,8 @@ def generate_launch_description():
             get_package_share_directory("scout_mini_base"), "config", "scout_mini.yaml"
         ),
     )
+
+    #scout_mini_description에서 로봇 xacro 호출
     robot_description_content = Command(
         [
             PathJoinSubstitution([FindExecutable(name="xacro")]),
@@ -36,12 +44,6 @@ def generate_launch_description():
     )
     robot_description = {"robot_description": robot_description_content}
     
-    rviz2_config_dir = LaunchConfiguration(
-        "rviz_config_dir",
-        default=os.path.join(
-            get_package_share_directory("scout_mini_description"), "rviz", "scout_mini.rviz"
-        ),
-    )
 
     return LaunchDescription(
         [
@@ -78,14 +80,6 @@ def generate_launch_description():
                 ],
                 output="screen",
             ),
-            #  Node(
-            #     package="rviz2",
-            #     executable="rviz2",
-            #     name="rviz2",
-            #     output="screen",
-            #     arguments=["-d", rviz2_config_dir],
-            #     parameters=[{"use_sim_time": use_sim_time}],
-            # ),
             Node(
                 package="twist_mux",
                 executable="twist_mux",

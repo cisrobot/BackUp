@@ -31,6 +31,10 @@ colcon build --symlink-install
 
 ## Usage
 ```
-sudo ip link set can0 up type can bitrate 500000
+sudo ip link set can2 up type can bitrate 500000
 ros2 launch scout_mini_base base_launch.py
+
+Also, if you want to use with other sensors(velodyne vlp16, d455 camera etc...)
+-> ros2 launch scout_mini_base marin_launch.py
 ```
+
