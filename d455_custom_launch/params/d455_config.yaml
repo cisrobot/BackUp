@@ -10,3 +10,5 @@
     align_depth.enable: true
     spatial_filter.enable: true
     temporal_filter.enable: true
+
+    # --- 컬러 카메라 노출 관련 수정 ---#
